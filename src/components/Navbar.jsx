@@ -2,17 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {FiShoppingBag} from 'react-icons/fi'
 import {BsFillPencilFill} from 'react-icons/bs'
-import { login, logout } from '../api/firebase.js'
+import { login, logout, onUserStateChange } from '../api/firebase.js'
 import { useState } from 'react';
+import { useEffect } from 'react';
+import User from './User.jsx';
 
 export default function Navbar() {
-    const [user, setUser] = useState();
-    const handleLogin = () => {
-        login().then(user => setUser(user));
-    }
-    const handleLogout = () => {
-        logout().then(user => setUser(user));
-    }
+    const [userState, setUserState] = useState();
+
+    useEffect(() => {
+        onUserStateChange((user) => {
+            console.log(user)
+            setUserState(user)
+        })
+    }, []);
+
 
     return (
         <header className='flex justify-between border-b border-gray-300 p-2'>
@@ -26,8 +30,9 @@ export default function Navbar() {
                 <Link to='/products/new' className='text-2xl'>
                     <BsFillPencilFill/>
                 </Link>
-                {!user && <button onClick={handleLogin}>Login</button>}
-                {user && <button onClick={handleLogout}>Logout</button>}
+                {userState && <User user={userState}/>}
+                {!userState && <button onClick={login}>Login</button>}
+                {userState && <button onClick={logout}>Logout</button>}
             </nav>
         </header>
     );
