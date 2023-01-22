@@ -6,7 +6,8 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { getDatabase, ref, set, child, get, onValue } from "firebase/database"
+import { getDatabase, ref, set, get, onValue } from "firebase/database";
+import {v4 as uuid } from 'uuid';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -54,6 +55,17 @@ async function adminUser(user) {
             }
             return user;
     });
+}
+
+export async function addNewProduct(product, imageUrl) {
+    const id = uuid();
+    set(ref(database, `products/${id}`), {
+        ...product,
+        id,
+        price: parseInt(product.price),
+        image: imageUrl,
+        options: product.options.split(','),
+    })
 }
 
 // 자동로그인 멈춤.
