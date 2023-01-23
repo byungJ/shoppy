@@ -59,13 +59,26 @@ async function adminUser(user) {
 
 export async function addNewProduct(product, imageUrl) {
     const id = uuid();
-    set(ref(database, `products/${id}`), {
+    return set(ref(database, `products/${id}`), {
         ...product,
         id,
         price: parseInt(product.price),
         image: imageUrl,
         options: product.options.split(','),
     })
+}
+
+export async function getProducts() {
+  return get(ref(database, 'products')).then(snapshot => {
+    if(snapshot.exists()) {
+      
+      // value값들만 뽑아서 사용합니다.
+      console.log('Object',Object.values(snapshot.val()));
+      console.log('기본test', snapshot.val());
+      return Object.values(snapshot.val());
+    }
+    return [];
+  })
 }
 
 // 자동로그인 멈춤.
