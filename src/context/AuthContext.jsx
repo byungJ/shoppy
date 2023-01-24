@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
-import { createContext } from 'react';
-import { login, logout, onUserStateChange } from '../../api/firebase';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { onUserStateChange, login, logout } from '../api/firebase';
+
 
 const AuthContext = createContext();
 
@@ -17,7 +17,7 @@ export function AuthContextProvider({children}) {
 
     // {userState, login: login, logout: logout}
     // login, logout 함수도 축약
-    return <AuthContext.Provider value={{userState, login, logout}}>
+    return <AuthContext.Provider value={{userState, uid: userState && userState.uid, login, logout}}>
         {children}
     </AuthContext.Provider>
 }
