@@ -1,8 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { addNewProduct } from '../api/firebase';
 import { uploadImage } from '../api/uploader';
 import Button from '../components/ui/Button';
+import useProducts from '../hooks/useProducts';
 
 export default function NewProducts() {
     const [product, setProduct] = useState({});
@@ -11,11 +10,14 @@ export default function NewProducts() {
     const [isUploading, setIsUploading] = useState(false);
     const [success, setSucess] = useState();
 
-    const queryClient = useQueryClient();
-    // mutation은 일반적으로 데이터를 생성/업데이트/삭제 하거나 서버 부작용(side-effects)을 수행하는 데 사용됩니다.
-    const addProduct = useMutation(({product, url}) => addNewProduct(product, url), {
-        onSuccess: () => queryClient.invalidateQueries(['products']),
-    });
+    // useProducts hook으로 한번에 관리 해줍니다.
+    // const queryClient = useQueryClient();
+    // // mutation은 일반적으로 데이터를 생성/업데이트/삭제 하거나 서버 부작용(side-effects)을 수행하는 데 사용됩니다.
+    // const addProduct = useMutation(({product, url}) => addNewProduct(product, url), {
+    //     onSuccess: () => queryClient.invalidateQueries(['products']),
+    // });
+
+    const {addProduct} = useProducts();
 
     const handleSubmit = (e) => {
         // 제품의 사진을 Cloudinary 업로드 하고 URL을 획득 합니다.
