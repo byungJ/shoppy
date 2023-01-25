@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import Button from '../components/ui/Button';
-import { addOrUpdateToCart } from '../api/firebase';
+import useCart from '../hooks/useCart';
 
 export default function ProductDetail() {
 
-    const { uid } = useAuthContext(); 
+    const { addOrUpdateItem } = useCart();
 
     // navigate에서 param으로 보낸 state를 받습니다.
     const {
@@ -17,6 +17,8 @@ export default function ProductDetail() {
     } = useLocation();
     //console.log(useLocation());
     
+    const [success, setSuccess] = useState();
+
     // 상품 옵션을 저장하기 위한 state를 별도로 만들어 줍니다.
     const [selected , setSelected] = useState(options && options[0]);
     
@@ -25,7 +27,14 @@ export default function ProductDetail() {
     }
     const handleClick = (e) => {
         const product = { id, image, title, price, option: selected, quantity: 1};
-        addOrUpdateToCart(uid, product);
+        addOrUpdateItem.mutate(product, {
+            onSuccess: () => {
+                setSuccess('장바구니에 추가되었습니다.');
+                setTimeout(() => {
+                    setSuccess(null);
+                }, 3000);
+            }
+        });
     }
     
     return (
@@ -43,6 +52,7 @@ export default function ProductDetail() {
                             {options && options.map((option, index) => (<option key={index}>{option}</option>))}
                         </select>
                     </div>
+                    {success && <p className='my-2 font-bold'>{success}</p>}
                     <Button onClick={handleClick} text='장바구니 추가'/>
                 </div>
             </section>

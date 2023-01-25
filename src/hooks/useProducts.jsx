@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addNewProduct, getProducts as fetchProducts } from '../api/firebase';
 
 // 한 곳에서 동일한 캐쉬키로 데이터를 읽어오는 거랑 업데이트하는게 같이 있으면 관리하기가 편리 합니다.
+// UI컴포넌트 코드랑 비즈니스 로직를 분리 할 수 있습니다.
 export default function useProducts() {
     const queryClient = useQueryClient();
 
