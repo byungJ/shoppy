@@ -16,4 +16,3 @@ export default function ProductCard({product, product: {id, image, title, catego
         </li>
     );
 }
-
